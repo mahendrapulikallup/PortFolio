@@ -1,0 +1,577 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile.name|default:"mahendra pulikallu" }} - Full Stack Developer{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Page-Specific Glassmorphism & Centering Styles */
+.relative-z-2 {
+    position: relative;
+    z-index: 2;
+}
+
+.hover-glow:hover {
+    text-shadow: 0 0 10px var(--primary-color);
+}
+
+.btn-group .btn {
+    border-radius: 10px !important;
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Card images zoom effect */
+.project-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Parallax ambient glows */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(18, 255, 0, 0.1) 0%, rgba(18, 255, 0, 0) 70%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    left: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(18, 255, 0, 0.08) 0%, rgba(18, 255, 0, 0) 70%);
+    z-index: 1;
+    pointer-events: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand text-green neon-text-glow" href="#home">{{ profile.name|default:"mahendra pulikallu" }}</a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="#skills">Skills</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="#projects">Projects</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero-section py-5">
+    <!-- Floating Particles -->
+    <div class="floating-particles" id="particleContainer">
+        <div class="particle" style="width: 5px; height: 5px; left: 10%; top: 20%; animation-duration: 6s; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 8px; height: 8px; left: 25%; top: 60%; animation-duration: 9s; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 4px; height: 4px; left: 45%; top: 15%; animation-duration: 7s; animation-delay: 1s;"></div>
+        <div class="particle" style="width: 6px; height: 6px; left: 65%; top: 75%; animation-duration: 8s; animation-delay: 3s;"></div>
+        <div class="particle" style="width: 5px; height: 5px; left: 80%; top: 30%; animation-duration: 10s; animation-delay: 0.5s;"></div>
+        <div class="particle" style="width: 7px; height: 7px; left: 90%; top: 50%; animation-duration: 11s; animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container relative-z-2">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6 hero-content fade-in">
+                <h1 class="display-4 fw-bold mb-3">Hi, I'm <span class="text-green neon-text-glow">{{ profile.name|default:"Mahendra Pulikallu" }}</span></h1>
+                <h2 class="h3 mb-4">
+                    <span id="role-text" class="typing-animation text-white"></span>
+                </h2>
+                <p class="lead mb-4 text-muted">{{ profile.bio|default:"Passionate full-stack developer creating amazing web experiences." }}</p>
+
+                <div class="d-flex gap-3 mb-5">
+                    {% if active_resume %}
+                        <a href="{% url 'user:download_resume' %}" class="btn-primary-green text-center d-inline-block text-decoration-none">
+                            <i class="fas fa-download me-2"></i>Download Resume
+                        </a>
+                    {% endif %}
+                    <a href="#contact" class="btn-outline-green text-center d-inline-block">
+                        <i class="fas fa-envelope me-2"></i>Contact Me
+                    </a>
+                </div>
+
+                <!-- Social Links -->
+                <div class="social-links d-flex gap-3">
+                    {% for link in social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="text-white fs-4 social-link" style="transition: var(--transition);">
+                            <i class="{{ link.icon|default:'fas fa-link' }}"></i>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center fade-in mt-5 mt-lg-0 d-flex justify-content-center align-items-center">
+                <div class="position-relative d-inline-flex justify-content-center align-items-center" style="width: 360px; height: 360px;">
+                    <!-- Outer Dashed Ring -->
+                    <div class="position-absolute" style="top: 0; left: 0; width: 100%; height: 100%; border: 2px dashed #12ff00; border-radius: 50%; opacity: 0.6; animation: spinReverse 20s linear infinite;"></div>
+                    
+                    <!-- Profile Image Container -->
+                    <div class="profile-image-container position-relative rounded-circle overflow-hidden z-3" style="width: 290px; height: 290px; background: transparent;">
+                        {% if profile.profile_image %}
+                            <img src="{{ profile.profile_image.url }}?v={{ profile.updated_at|date:"U" }}" alt="{{ profile.name }}" class="profile-image w-100 h-100" style="object-fit: cover;">
+                        {% else %}
+                            <div class="bg-card text-green d-flex align-items-center justify-content-center w-100 h-100" style="font-size: 5rem;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <style>
+                    @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+                </style>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>About Me</h2>
+            <div class="underline mx-auto"></div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 fade-in">
+                <h3 class="mb-4 text-green">Get to know me</h3>
+                <p class="lead mb-4 text-muted">{{ profile.bio|default:"I'm a passionate developer who loves creating innovative solutions and bringing ideas to life through code." }}</p>
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt text-green me-3 fs-3"></i>
+                            <div>
+                                <h6 class="mb-0 text-white fw-bold">Location</h6>
+                                <small class="text-muted">{{ profile.location|default:"Tirupati, India" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope text-green me-3 fs-3"></i>
+                            <div>
+                                <h6 class="mb-0 text-white fw-bold">Email</h6>
+                                <small class="text-muted">{{ profile.email|default:"your.email@example.com" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% if profile.phone %}
+                    <div class="col-md-6 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-phone text-green me-3 fs-3"></i>
+                            <div>
+                                <h6 class="mb-0 text-white fw-bold">Phone</h6>
+                                <small class="text-muted">{{ profile.phone }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 fade-in text-center">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card-dark p-4 h-100 text-center" style="border: 1px solid rgba(18, 255, 0, 0.1);">
+                            <i class="fas fa-code text-green fa-2x mb-3"></i>
+                            <h5 class="text-green">Full Stack</h5>
+                            <p class="text-muted small mb-0">Building robust end-to-end web architectures.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-dark p-4 h-100 text-center" style="border: 1px solid rgba(18, 255, 0, 0.1);">
+                            <i class="fas fa-brain text-green fa-2x mb-3"></i>
+                            <h5 class="text-green">AI & ML</h5>
+                            <p class="text-muted small mb-0">Integrating smart models and predictive code.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-dark p-4 h-100 text-center" style="border: 1px solid rgba(18, 255, 0, 0.1);">
+                            <i class="fas fa-rocket text-green fa-2x mb-3"></i>
+                            <h5 class="text-green">Dynamic Solutions</h5>
+                            <p class="text-muted small mb-0">High-performance application optimizations and logic.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills" class="py-5">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>Skills & Expertise</h2>
+            <div class="underline mx-auto"></div>
+        </div>
+        <div class="row justify-content-center">
+            {% for category, skills_list in skills_by_category.items %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card-dark p-4 h-100 fade-in" style="border: 1px solid rgba(18, 255, 0, 0.1);">
+                        <h4 class="mb-4 text-center text-green">
+                            {% if category == 'frontend' %}
+                                <i class="fas fa-desktop me-2"></i>Frontend
+                            {% elif category == 'backend' %}
+                                <i class="fas fa-server me-2"></i>Backend
+                            {% elif category == 'database' %}
+                                <i class="fas fa-database me-2"></i>Database
+                            {% elif category == 'ai_ml' %}
+                                <i class="fas fa-brain me-2"></i>AI/ML
+                            {% else %}
+                                <i class="fas fa-tools me-2"></i>{{ category|title }}
+                            {% endif %}
+                        </h4>
+                        <div class="row g-3 justify-content-center">
+                            {% for skill in skills_list %}
+                                <div class="col-6">
+                                    <div class="p-2 text-center rounded d-flex align-items-center justify-content-center h-100" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(18, 255, 0, 0.08); transition: var(--transition);">
+                                        {% if skill.icon %}
+                                            <i class="{{ skill.icon }} text-green me-2"></i>
+                                        {% else %}
+                                            <i class="fas fa-code text-green me-2"></i>
+                                        {% endif %}
+                                        <span class="text-white fw-semibold" style="font-size: 0.85rem;">{{ skill.name }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">No skills added yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="py-5">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>Featured Projects</h2>
+            <div class="underline mx-auto"></div>
+        </div>
+
+        <!-- Project Filter -->
+        <div class="row mb-5 fade-in">
+            <div class="col-12 text-center">
+                <div class="btn-group flex-wrap gap-2 justify-content-center" role="group" style="border: none;">
+                    <button type="button" class="btn btn-outline-green active" data-filter="all">All</button>
+                    <button type="button" class="btn btn-outline-green" data-filter="web">Web Dev</button>
+                    <button type="button" class="btn btn-outline-green" data-filter="ml">ML/AI</button>
+                    <button type="button" class="btn btn-outline-green" data-filter="mobile">Mobile</button>
+                    <button type="button" class="btn btn-outline-green" data-filter="other">Other</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="projectsContainer">
+            {% for project in projects %}
+                <div class="col-lg-4 col-md-6 mb-4 project-item fade-in" data-category="{{ project.category }}">
+                    <div class="card-dark h-100 overflow-hidden d-flex flex-column" style="border: 1px solid rgba(18, 255, 0, 0.1);">
+                        <a href="{% url 'user:project_detail' project.pk %}" class="text-decoration-none">
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 220px; object-fit: cover; transition: var(--transition);">
+                            {% else %}
+                                <div class="d-flex align-items-center justify-content-center text-green" style="height: 220px; background: #141414; border-bottom: 1px solid rgba(18, 255, 0, 0.05);">
+                                    <i class="fas fa-project-diagram fa-3x"></i>
+                                </div>
+                            {% endif %}
+                        </a>
+                        <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                            <h5 class="card-title text-green mb-2">
+                                <a href="{% url 'user:project_detail' project.pk %}" class="text-green text-decoration-none hover-glow">{{ project.title }}</a>
+                            </h5>
+                            <p class="text-muted small mb-3">{{ project.tech_stack }}</p>
+                            <p class="card-text text-muted flex-grow-1">{{ project.description|truncatechars:120 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                            <div class="d-flex gap-3 w-100">
+                                {% if project.github_link %}
+                                    <a href="{{ project.github_link }}" target="_blank" class="btn btn-outline-green btn-sm px-3 flex-grow-1 text-center d-flex align-items-center justify-content-center">
+                                        <i class="fab fa-github me-1"></i> Code
+                                    </a>
+                                {% endif %}
+                                {% if project.live_link %}
+                                    <a href="{{ project.live_link }}" target="_blank" class="btn-primary-green btn-sm py-2 px-3 text-center flex-grow-1 text-decoration-none d-flex align-items-center justify-content-center" style="color: #000;">
+                                        <i class="fas fa-external-link-alt me-1"></i> Live
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">No featured projects added yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5">
+    <div class="container">
+        <div class="section-title fade-in">
+            <h2>Get In Touch</h2>
+            <div class="underline mx-auto"></div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card-dark p-5 fade-in" style="border: 1px solid rgba(18, 255, 0, 0.1);">
+                    <form method="post" action="{% url 'user:contact' %}" id="portfolioContactForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label text-muted fw-semibold">Name</label>
+                                {{ contact_form.name }}
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label text-muted fw-semibold">Email</label>
+                                {{ contact_form.email }}
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted fw-semibold">Message</label>
+                            {{ contact_form.message }}
+                        </div>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn-primary-green w-100 py-3" id="submitContactBtn">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row mt-5 text-center fade-in g-4">
+                    <div class="col-md-4">
+                        <div class="p-4 rounded h-100" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                            <i class="fas fa-envelope fa-2x text-green mb-3"></i>
+                            <h6 class="text-white">Email</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">{{ profile.email|default:"mahendrapulikallu27@gmail.com" }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded h-100" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                            <i class="fas fa-phone fa-2x text-green mb-3"></i>
+                            <h6 class="text-white">Phone</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">{{ profile.phone|default:"8639033173" }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded h-100" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                            <i class="fas fa-map-marker-alt fa-2x text-green mb-3"></i>
+                            <h6 class="text-white">Location</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">{{ profile.location|default:"Karakambadi, Tirupati" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5" style="background: #050505; border-top: 1px solid rgba(18, 255, 0, 0.05);">
+    <div class="container text-center">
+        <div class="mb-4">
+            <h3 class="text-green mb-3 neon-text-glow" style="font-weight: 800;">MahiCodeX</h3>
+            <div class="d-flex justify-content-center gap-4">
+                {% for link in social_links %}
+                    <a href="{{ link.url }}" target="_blank" class="text-white fs-4 hover-glow" style="transition: var(--transition);">
+                        <i class="{{ link.icon|default:'fas fa-link' }}"></i>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <p class="text-muted small">&copy; 2026 MahiCodeX. All rights reserved.</p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+{% if profile.role_titles %}
+    {{ profile.role_titles|json_script:"role-titles-data" }}
+{% else %}
+    <script id="role-titles-data" type="application/json">["Full Stack Developer","Django Expert","Content Creator"]</script>
+{% endif %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Dynamic background cursor follower setup
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor-follower';
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    // Expand follower on clicking links/buttons
+    document.querySelectorAll('a, button, [role="button"]').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.width = '30px';
+            cursor.style.height = '30px';
+            cursor.style.backgroundColor = 'rgba(18, 255, 0, 0.3)';
+        });
+        element.addEventListener('mouseleave', () => {
+            cursor.style.width = '15px';
+            cursor.style.height = '15px';
+            cursor.style.backgroundColor = 'var(--primary-color)';
+        });
+    });
+
+    // Intersection Observer for scroll reveal animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const headerOffset = 80;
+                const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Navbar ambient background change on scroll
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.style.padding = '0.8rem 0';
+            navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+            navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+        } else {
+            navbar.style.padding = '1.2rem 0';
+            navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+            navbar.style.boxShadow = 'none';
+        }
+    });
+
+    // Dynamic database typing animation
+    const rawRoles = JSON.parse(document.getElementById('role-titles-data').textContent);
+    const roles = Array.isArray(rawRoles) ? rawRoles : [];
+    let roleIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const roleText = document.getElementById('role-text');
+
+    if (roles && roles.length > 0 && roleText) {
+        function typeWriter() {
+            const currentRole = roles[roleIndex];
+
+            if (isDeleting) {
+                roleText.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    setTimeout(typeWriter, 800);
+                } else {
+                    setTimeout(typeWriter, 50);
+                }
+            } else {
+                roleText.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === currentRole.length) {
+                    setTimeout(() => {
+                        isDeleting = true;
+                        typeWriter();
+                    }, 2500);
+                } else {
+                    setTimeout(typeWriter, 120);
+                }
+            }
+        }
+        setTimeout(typeWriter, 1000);
+    }
+
+    // Projects Filtering Logic
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const projectItems = document.querySelectorAll('.project-item');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+
+            // Set active class
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Hide/Show items with scale animation
+            projectItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                if (filter === 'all' || category === filter) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 50);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+
+    // Contact Form Loader Indicator on submit
+    const contactForm = document.getElementById('portfolioContactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            const btn = document.getElementById('submitContactBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Encrypting & Sending...';
+            btn.style.opacity = '0.8';
+            btn.disabled = true;
+        });
+    }
+});
+</script>
+{% endblock %}

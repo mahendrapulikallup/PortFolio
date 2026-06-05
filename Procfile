@@ -1,0 +1,1 @@
+web: gunicorn mahicodeX_portfolio.wsgi

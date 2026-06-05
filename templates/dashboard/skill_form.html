@@ -1,0 +1,40 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}{{ title }} — CodeX Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="text-green" style="font-family:'Lexend',sans-serif;"><i class="fas fa-code me-2"></i>{{ title }}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label text-muted">Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.category.id_for_label }}" class="form-label text-muted">Category</label>
+                        {{ form.category }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.icon.id_for_label }}" class="form-label text-muted">Icon Class</label>
+                        {{ form.icon }}
+                        <div class="form-text">e.g., fab fa-python, fas fa-database</div>
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn-primary-green px-5 py-2">Save Skill</button>
+                        <a href="{% url 'dashboard:skills' %}" class="btn px-4 py-2 text-decoration-none" style="border: 1px solid rgba(18,255,0,0.3); color: #12ff00; border-radius: 8px;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}CodeX Dashboard — Portfolio Management{% endblock %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="text-green neon-text-glow" style="font-family:'Lexend',sans-serif;">Portfolio Dashboard</h1>
+        <p class="text-muted">Welcome back! Manage your portfolio from here.</p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5 g-4">
+    <div class="col-md-3 col-6">
+        <div class="p-4" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <h6 class="text-muted mb-2">Total Projects</h6>
+            <h2 class="text-green mb-0">{{ total_projects }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="p-4" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <h6 class="text-muted mb-2">Total Skills</h6>
+            <h2 class="text-green mb-0">{{ total_skills }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="p-4" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <h6 class="text-muted mb-2">Total Messages</h6>
+            <h2 class="text-green mb-0">{{ total_messages }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="p-4" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <h6 class="text-muted mb-2">Unread Messages</h6>
+            <h2 class="mb-0" style="color: #ff6b6b;">{{ unread_messages }}</h2>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="p-4" style="border: 1px solid rgba(18,255,0,0.1); border-radius: 14px; background: rgba(10,10,10,0.6);">
+            <h5 class="text-green mb-4" style="font-family:'Lexend',sans-serif;">Quick Actions</h5>
+            <div class="row g-3">
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'dashboard:add_project' %}" class="btn px-4 py-3 text-center text-decoration-none d-flex flex-column align-items-center justify-content-center h-100" style="border: 1px solid rgba(18,255,0,0.2); color: #12ff00; border-radius: 12px; background: rgba(18,255,0,0.03); transition: all 0.3s ease;">
+                        <span style="font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px;">ADD PROJECT</span>
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'dashboard:add_skill' %}" class="btn px-4 py-3 text-center text-decoration-none d-flex flex-column align-items-center justify-content-center h-100" style="border: 1px solid rgba(18,255,0,0.2); color: #12ff00; border-radius: 12px; background: rgba(18,255,0,0.03); transition: all 0.3s ease;">
+                        <span style="font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px;">ADD SKILL</span>
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'dashboard:add_social_link' %}" class="btn px-4 py-3 text-center text-decoration-none d-flex flex-column align-items-center justify-content-center h-100" style="border: 1px solid rgba(18,255,0,0.2); color: #12ff00; border-radius: 12px; background: rgba(18,255,0,0.03); transition: all 0.3s ease;">
+                        <span style="font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px;">ADD SOCIAL</span>
+                    </a>
+                </div>
+                <div class="col-md-3 col-6">
+                    <a href="{% url 'dashboard:add_resume' %}" class="btn px-4 py-3 text-center text-decoration-none d-flex flex-column align-items-center justify-content-center h-100" style="border: 1px solid rgba(18,255,0,0.2); color: #12ff00; border-radius: 12px; background: rgba(18,255,0,0.03); transition: all 0.3s ease;">
+                        <span style="font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px;">ADD RESUME</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .btn:hover {
+        background: rgba(18,255,0,0.1) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(18,255,0,0.15);
+    }
+</style>
+{% endblock %}

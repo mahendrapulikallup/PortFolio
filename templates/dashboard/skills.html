@@ -1,0 +1,62 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Manage Skills — CodeX Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-green mb-0" style="font-family:'Lexend',sans-serif;"><i class="fas fa-code me-2"></i>Manage Skills</h1>
+            <a href="{% url 'dashboard:add_skill' %}" class="btn-primary-green px-4 py-2 text-decoration-none" style="border-radius: 8px;">
+                <i class="fas fa-plus me-2"></i>Add Skill
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px; overflow: hidden;">
+            <div class="card-body p-0">
+                {% if skills %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                            <thead style="background: rgba(18,255,0,0.05);">
+                                <tr>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Name</th>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Category</th>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Icon</th>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for skill in skills %}
+                                    <tr>
+                                        <td class="py-3 px-4 fw-semibold text-white border-bottom border-dark">{{ skill.name }}</td>
+                                        <td class="py-3 px-4 border-bottom border-dark"><span class="badge" style="background: rgba(18,255,0,0.15); color: #12ff00;">{{ skill.get_category_display }}</span></td>
+                                        <td class="py-3 px-4 border-bottom border-dark"><i class="{{ skill.icon }} text-green fa-lg"></i> <small class="text-muted ms-2">{{ skill.icon }}</small></td>
+                                        <td class="py-3 px-4 border-bottom border-dark">
+                                            <a href="{% url 'dashboard:edit_skill' skill.pk %}" class="btn btn-sm btn-outline-primary me-1" style="border-color: #12ff00; color: #12ff00;"><i class="fas fa-edit"></i></a>
+                                            <form method="post" action="{% url 'dashboard:delete_skill' skill.pk %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this skill?');"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-code fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No skills yet</h5>
+                        <p class="text-muted">Add your first skill to showcase your expertise.</p>
+                        <a href="{% url 'dashboard:add_skill' %}" class="btn-primary-green px-4 py-2 text-decoration-none">Add Skill</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

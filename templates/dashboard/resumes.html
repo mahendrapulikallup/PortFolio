@@ -1,0 +1,71 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Manage Resumes — CodeX Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-green mb-0" style="font-family:'Lexend',sans-serif;"><i class="fas fa-file-alt me-2"></i>Manage Resumes</h1>
+            <a href="{% url 'dashboard:add_resume' %}" class="btn-primary-green px-4 py-2 text-decoration-none" style="border-radius: 8px;">
+                <i class="fas fa-plus me-2"></i>Upload Resume
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px; overflow: hidden;">
+            <div class="card-body p-0">
+                {% if resumes %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                            <thead style="background: rgba(18,255,0,0.05);">
+                                <tr>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">File Name</th>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Uploaded Date</th>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Status</th>
+                                    <th class="py-3 px-4" style="color: #12ff00; border-bottom: 1px solid rgba(18,255,0,0.1);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resume in resumes %}
+                                    <tr>
+                                        <td class="py-3 px-4 fw-semibold text-white border-bottom border-dark">
+                                            <a href="{{ resume.resume_file.url }}" target="_blank" class="text-decoration-none" style="color: #12ff00;">
+                                                <i class="fas fa-file-pdf me-2"></i>{{ resume.resume_file.name|slice:"8:" }}
+                                            </a>
+                                        </td>
+                                        <td class="py-3 px-4 text-muted border-bottom border-dark">{{ resume.uploaded_date|date:"M d, Y h:i A" }}</td>
+                                        <td class="py-3 px-4 border-bottom border-dark">
+                                            {% if resume.is_active %}
+                                                <span class="badge" style="background: rgba(18,255,0,0.2); color: #12ff00;"><i class="fas fa-check-circle me-1"></i>Active</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="py-3 px-4 border-bottom border-dark">
+                                            <form method="post" action="{% url 'dashboard:delete_resume' resume.pk %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this resume?');"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No resumes uploaded</h5>
+                        <p class="text-muted">Upload your CV to display on your portfolio.</p>
+                        <a href="{% url 'dashboard:add_resume' %}" class="btn-primary-green px-4 py-2 text-decoration-none">Upload Resume</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

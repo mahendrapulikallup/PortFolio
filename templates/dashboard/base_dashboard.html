@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Dashboard Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(10,10,10,0.95); border-bottom: 1px solid rgba(18,255,0,0.1); backdrop-filter: blur(20px);">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'dashboard:home' %}">
+            <span class="text-green neon-text-glow" style="font-family:'Lexend',sans-serif; font-weight:800; font-size:1.3rem;">CodeX</span>
+            <span class="text-white" style="font-family:'Inter',sans-serif; font-weight:300; font-size:1.1rem;">Dashboard</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#dashNavbar" aria-controls="dashNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="dashNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'dashboard:profile' %}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'dashboard:projects' %}">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'dashboard:skills' %}">Skills</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'dashboard:social_links' %}">Social</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'dashboard:resumes' %}">Resumes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'dashboard:messages' %}">Messages</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{% url 'user:index' %}" target="_blank">View Site</a>
+                </li>
+                <li class="nav-item">
+                    <form method="post" action="{% url 'dashboard:logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link px-2 border-0 bg-transparent" style="color: #ff6b6b; cursor: pointer;">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 100px; min-height: 100vh; padding-bottom: 40px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible fade show border-0 mb-3" role="alert" style="background: rgba(18,255,0,0.08); color: #12ff00; border: 1px solid rgba(18,255,0,0.15); border-radius: 10px;">
+                <i class="fas fa-check-circle me-2"></i>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: invert(1);"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% block dashboard_content %}{% endblock %}
+</div>
+{% endblock %}

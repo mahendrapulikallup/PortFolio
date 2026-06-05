@@ -1,0 +1,66 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}{{ title }} — CodeX Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="text-green" style="font-family:'Lexend',sans-serif;"><i class="fas fa-project-diagram me-2"></i>{{ title }}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label text-muted">Title</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label text-muted">Description</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.tech_stack.id_for_label }}" class="form-label text-muted">Tech Stack</label>
+                        {{ form.tech_stack }}
+                        <div class="form-text">Enter technologies separated by commas</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.category.id_for_label }}" class="form-label text-muted">Category</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check mt-4 pt-2">
+                                {{ form.featured }}
+                                <label for="{{ form.featured.id_for_label }}" class="form-check-label text-muted ms-2">Featured Project</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.image.id_for_label }}" class="form-label text-muted">Project Image</label>
+                        {{ form.image }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.github_link.id_for_label }}" class="form-label text-muted">GitHub Link</label>
+                            {{ form.github_link }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.live_link.id_for_label }}" class="form-label text-muted">Live Demo Link</label>
+                            {{ form.live_link }}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn-primary-green px-5 py-2">Save Project</button>
+                        <a href="{% url 'dashboard:projects' %}" class="btn px-4 py-2 text-decoration-none" style="border: 1px solid rgba(18,255,0,0.3); color: #12ff00; border-radius: 8px;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

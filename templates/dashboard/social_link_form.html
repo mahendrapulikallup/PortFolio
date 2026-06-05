@@ -1,0 +1,44 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}{{ title }} — CodeX Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="text-green" style="font-family:'Lexend',sans-serif;"><i class="fas fa-share-alt me-2"></i>{{ title }}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card" style="background: #111; border: 1px solid rgba(18,255,0,0.1); border-radius: 14px;">
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.platform_name.id_for_label }}" class="form-label text-muted">Platform Name</label>
+                        {{ form.platform_name }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.url.id_for_label }}" class="form-label text-muted">URL</label>
+                        {{ form.url }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.icon.id_for_label }}" class="form-label text-muted">Icon Class</label>
+                        {{ form.icon }}
+                        <div class="form-text">e.g., fab fa-github, fab fa-linkedin</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.order.id_for_label }}" class="form-label text-muted">Display Order</label>
+                        {{ form.order }}
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn-primary-green px-5 py-2">Save Link</button>
+                        <a href="{% url 'dashboard:social_links' %}" class="btn px-4 py-2 text-decoration-none" style="border: 1px solid rgba(18,255,0,0.3); color: #12ff00; border-radius: 8px;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Sent - MahiCodeX Portfolio{% endblock %}
+
+{% block extra_head %}
+<style>
+.success-card {
+    border: 1px solid rgba(18, 255, 0, 0.15) !important;
+    background: var(--bg-card) !important;
+    box-shadow: 0 0 50px rgba(18, 255, 0, 0.15), 0 0 20px rgba(18, 255, 0, 0.05);
+}
+
+.cursor-follower {
+    position: fixed;
+    width: 15px;
+    height: 15px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    box-shadow: 0 0 15px var(--primary-color), 0 0 5px var(--primary-color);
+    transform: translate(-50%, -50%);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row justify-content-center w-100">
+        <div class="col-lg-6">
+            <div class="card-dark success-card text-center p-5">
+                <div class="py-4">
+                    <i class="fas fa-check-circle fa-5x text-green mb-4 neon-text-glow"></i>
+                    <h2 class="text-green fw-bold mb-3">Transmission Successful!</h2>
+                    <p class="text-muted mb-5" style="font-size: 1.1rem;">
+                        Thank you for reaching out. Your message has been encrypted and saved successfully. I will review it and get back to you as soon as possible.
+                    </p>
+                    <a href="{% url 'user:index' %}" class="btn-primary-green py-3 px-5 text-decoration-none" style="color: #000;">
+                        <i class="fas fa-home me-2"></i>Return Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor-follower';
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.width = '30px';
+            cursor.style.height = '30px';
+            cursor.style.backgroundColor = 'rgba(18, 255, 0, 0.3)';
+        });
+        element.addEventListener('mouseleave', () => {
+            cursor.style.width = '15px';
+            cursor.style.height = '15px';
+            cursor.style.backgroundColor = 'var(--primary-color)';
+        });
+    });
+});
+</script>
+{% endblock %}

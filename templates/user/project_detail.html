@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - MahiCodeX Project Details{% endblock %}
+
+{% block extra_head %}
+<style>
+.detail-card {
+    border: 1px solid rgba(18, 255, 0, 0.15) !important;
+    background: var(--bg-card) !important;
+    box-shadow: 0 0 50px rgba(18, 255, 0, 0.15), 0 0 20px rgba(18, 255, 0, 0.05);
+}
+
+.tech-badge {
+    background: rgba(18, 255, 0, 0.1);
+    color: var(--primary-color);
+    border: 1px solid rgba(18, 255, 0, 0.2);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.cursor-follower {
+    position: fixed;
+    width: 15px;
+    height: 15px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    box-shadow: 0 0 15px var(--primary-color), 0 0 5px var(--primary-color);
+    transform: translate(-50%, -50%);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5 min-vh-100 d-flex flex-column justify-content-center">
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{% url 'user:index' %}" class="btn-outline-green py-2 px-4 d-inline-flex align-items-center text-decoration-none">
+                <i class="fas fa-arrow-left me-2"></i> Back to Portfolio
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card-dark detail-card p-4 p-md-5 overflow-hidden">
+                <div class="row align-items-center">
+                    <div class="col-md-12 text-center mb-5">
+                        <span class="badge bg-secondary mb-3 px-3 py-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
+                            {{ project.get_category_display }}
+                        </span>
+                        <h1 class="display-5 text-green neon-text-glow fw-bold mb-3">{{ project.title }}</h1>
+                        <div class="underline mx-auto"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        {% if project.image %}
+                            <div class="rounded-3 overflow-hidden border border-secondary shadow-lg mb-4" style="border-color: rgba(18, 255, 0, 0.2) !important;">
+                                <img src="{{ project.image.url }}" class="img-fluid w-100" alt="{{ project.title }}" style="max-height: 400px; object-fit: cover;">
+                            </div>
+                        {% else %}
+                            <div class="rounded-3 d-flex align-items-center justify-content-center text-green mb-4" style="height: 350px; background: #141414; border: 1px solid rgba(18, 255, 0, 0.1);">
+                                <i class="fas fa-project-diagram fa-5x"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-lg-6 d-flex flex-column justify-content-between">
+                        <div>
+                            <h4 class="text-white mb-3 fw-bold">Project Details</h4>
+                            <p class="text-muted leading-relaxed" style="font-size: 1.05rem;">
+                                {{ project.description|linebreaks }}
+                            </p>
+
+                            <h4 class="text-white mt-5 mb-3 fw-bold">Technologies Used</h4>
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                {% for tech in tech_list %}
+                                    <span class="tech-badge">
+                                        {{ tech }}
+                                    </span>
+                                {% empty %}
+                                    <span class="text-muted small">No technologies explicitly configured.</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            {% if project.github_link %}
+                                <a href="{{ project.github_link }}" target="_blank" class="btn btn-outline-green py-3 px-4 flex-grow-1 text-center d-flex align-items-center justify-content-center">
+                                    <i class="fab fa-github fa-lg me-2"></i> Source Code
+                                </a>
+                            {% endif %}
+                            {% if project.live_link %}
+                                <a href="{{ project.live_link }}" target="_blank" class="btn-primary-green py-3 px-4 flex-grow-1 text-center text-decoration-none d-flex align-items-center justify-content-center" style="color: #000;">
+                                    <i class="fas fa-external-link-alt fa-lg me-2"></i> Live Demo
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Follower cursor action
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor-follower';
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.width = '30px';
+            cursor.style.height = '30px';
+            cursor.style.backgroundColor = 'rgba(18, 255, 0, 0.3)';
+        });
+        element.addEventListener('mouseleave', () => {
+            cursor.style.width = '15px';
+            cursor.style.height = '15px';
+            cursor.style.backgroundColor = 'var(--primary-color)';
+        });
+    });
+});
+</script>
+{% endblock %}
